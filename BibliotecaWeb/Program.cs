@@ -22,11 +22,17 @@ namespace BibliotecaWeb
 
             var app = builder.Build();
 
+            // Garantir que o banco de dados e as tabelas sejam criados na inicializacao
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                context.Database.EnsureCreated();
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -34,8 +40,14 @@ namespace BibliotecaWeb
             app.UseRouting();
 
             app.UseAuthorization();
+
+            // Liberar e configurar Swagger para abrir direto na raiz (/)
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibliotecaWeb API v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.MapStaticAssets();
             app.MapControllerRoute(
