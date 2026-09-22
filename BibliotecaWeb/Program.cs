@@ -1,27 +1,27 @@
 using Microsoft.EntityFrameworkCore;
-using BibliotecaWeb.Data; // Ajuste para o namespace correto do seu DbContext
+using BibliotecaWeb.Data; // Nome da pasta onde está o DbContext
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Adicionar suporte a Controllers com Views (HTML/MVC) e suporte a APIs
+// 1. Adicionar suporte a Controllers com Views (HTML/MVC) e APIs
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. Configurar o DbContext para SQLite
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+// 2. Configurar o DbContext para SQLite (Troca 'AppDbContext' pelo nome real do teu contexto)
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
         ?? "Data Source=biblioteca.db"));
 
 var app = builder.Build();
 
-// 3. Criar a base de dados SQLite automaticamente no arranque (EnsureCreated)
+// 3. Criar a base de dados SQLite automaticamente
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<ApplicationDbContext>();
+        var context = services.GetRequiredService<AppDbContext>();
         context.Database.EnsureCreated();
     }
     catch (Exception ex)
@@ -31,8 +31,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 4. Configuração do Swagger
-// Agora o Swagger fica acessível em /swagger para não sobrescrever o seu site!
+// 4. Configuração do Swagger em /swagger
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
@@ -42,18 +41,15 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     });
 }
 
-app.UseStaticFiles(); // Garante o carregamento dos ficheiros CSS/JS da pasta wwwroot
-
+app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthorization();
 
-// 5. Configuração da rota padrão para as telas do site (MVC)
+// 5. Rota padrão para as páginas HTML do site
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Mapeia também os controllers de API
 app.MapControllers();
 
 app.Run();
