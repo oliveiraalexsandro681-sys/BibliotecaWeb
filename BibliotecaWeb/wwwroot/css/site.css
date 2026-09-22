@@ -1,0 +1,439 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+
+/* =========================
+   ABAIXO ESTA O NOSSO NAVBAR DA BIBLIOTECA
+   ========================= */
+
+.navbar {
+    background-color: #111827 !important;
+    padding: 15px 0;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+    .navbar-brand:hover {
+        color: #a78bfa !important;
+    }
+
+.navbar .nav-link {
+    color: white !important;
+    margin-left: 15px;
+}
+
+    .navbar .nav-link:hover {
+        color: #a78bfa !important;
+    }
+
+/* =========================
+   ABAIXO ESTA O NOSSO BANNER DESTAQUE
+   ========================= */
+
+.banner-destaque {
+    margin: 35px 0 50px 0;
+    min-height: 350px;
+    background: linear-gradient( 135deg, #111827, #312e81 );
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+}
+
+.banner-conteudo {
+    max-width: 600px;
+}
+
+.banner-tag {
+    color: #c4b5fd;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.banner-destaque h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 15px 0;
+}
+
+.banner-destaque p {
+    color: #d1d5db;
+    font-size: 1.15rem;
+    max-width: 500px;
+    margin-bottom: 30px;
+}
+
+.btn-catalogo {
+    display: inline-block;
+    background-color: #7c3aed;
+    color: white;
+    padding: 13px 25px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+    .btn-catalogo:hover {
+        background-color: #6d28d9;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .banner-imagem {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    }
+
+    .banner-imagem img {
+        width: 100%;
+        max-width: 450px;
+        max-height: 300px;
+        object-fit: contain;
+        display: block;
+    }
+
+    /*ABAIXO ESTÃO OS NOSSOS CARDS DE LIVROS*/
+   
+    .card-biblioteca{
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.10);
+        transition: 0.3s;
+    }
+
+    .card-biblioteca:hover{
+        transform: translateY(-6px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    }
+
+    .imagem-livro{
+        height: 280px;
+        width: 100%;
+        object-fit: contain;
+    }
+
+    .card-biblioteca .card-title{
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .btn-detalhes{
+        border-radius: 8px;
+        transition: 0.2s;
+    }
+
+    .btn-detalhes:hover{
+        transform: translateY(-2px);
+    }
+
+    /*
+        ABAIXO ESTA O NOSSO BUSCADOR
+    */
+
+    .buscador.card-biblioteca{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .campo-busca{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0 15px;
+        transition: 0.2s;
+    }
+
+    .campo-busca:focus-within {
+        border-color: #7c3ead;
+        box-shadow: 0 0 0 3px rgba(124,58,237, 0.12);
+    }
+
+    .campo-busca span{
+        font-size: 1.1rem;
+        margin-right: 8px;
+    }
+
+    .campo-busca input {
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 13px 15px;
+        font-size: 0.95rem;
+    }
+
+    .btn-buscar {
+        border: none;
+        background-color: #7c3ead;
+        color: white;
+        padding: 13px 22px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .btn-buscar:hover {
+        background-color: #6d28d9;
+        transform: translateY(-2px);
+    }
+
+    .btn-limpar {
+        background-color: #f3f4f6;
+        color: #374151;
+        padding: 13px 18px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+
+    .btn-limpar:hover {
+        background-color: #e5e7eb;
+        color: #111827;
+        text-decoration: none;
+    }
+
+/* =========================
+   ABAIXO ESTA O NOSSO MURAL
+   ========================= */
+
+.mural {
+    margin-top: 70px;
+    margin-bottom: 60px;
+}
+
+.mural-cabecalho {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.mural-tag {
+    color: #7c3aed;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.mural-cabecalho h2 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin: 8px 0;
+}
+
+.mural-cabecalho p {
+    color: #6b7280;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+/* =========================
+   CARDS DAS NOTÍCIAS
+   ========================= */
+
+.card-noticia {
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.10);
+    transition: 0.3s;
+}
+
+    .card-noticia:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    }
+
+.imagem-noticia {
+    height: 200px;
+    overflow: hidden;
+}
+
+    .imagem-noticia img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: 0.3s;
+    }
+
+.card-noticia:hover .imagem-noticia img {
+    transform: scale(1.05);
+}
+
+.conteudo-noticia {
+    padding: 20px;
+}
+
+.categoria-noticia {
+    color: #7c3aed;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.conteudo-noticia h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.conteudo-noticia p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.ler-noticia {
+    display: inline-block;
+    margin-top: 8px;
+    color: #7c3aed;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+    .ler-noticia:hover {
+        color: #6d28d9;
+    }
+
+    /*
+        ABAIXO ESTA O NOSSO CABEÇALHO DO CATÁLOGO
+    */
+
+    .catalogo-tag{
+        color: #7c3aed;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .catalogo-titulo{
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin: 8px 0;
+    }
+
+    .catalogo-descricao{
+        color: #6b7280;
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    /*
+        ABAIXO ESTA O NOSSO BUSCADOR DO CATÁLOGO
+    */
+
+    .buscador-catalogo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        max-width: 700px;
+        margin: 0 auto 25px auto;
+    }
+
+    .campo-busca-catalogo{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        transition: 0.2s;
+    }
+
+    .campo-busca-catalogo:focus-within{
+        border-color: #7c3aed;
+        box-shadow: 0 0 0 3px rgba(124,58,237, 0.12);
+    }
+
+    .campo-busca-catalogo span{
+        font-size: 1.1rem;
+        margin-right: 8px;
+    }
+
+    .campo-busca-catalogo input{
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 13px 5px;
+        font-size: 0.95rem;
+    }
+
+    .btn-buscar-catalogo{
+        border: none;
+        background-color: #7c3aed; 
+        color: white;
+        padding: 13px 22px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .btn-buscar-catalogo:hover{
+        background-color: #6d28d9;
+        transform: translateY(-2px);
+    }
+
+    /*
+        ABAIXO ESTA A PARTE DE CATEGORIA DOS CARDS
+    */
+
+    .categoria-card{
+        display: inline-block;
+        color: #7c3aed;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }

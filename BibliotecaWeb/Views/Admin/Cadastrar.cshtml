@@ -1,0 +1,81 @@
+@model BibliotecaWeb.Models.Obra
+
+@{
+    ViewData["Title"] = "Cadastrar Obra";
+}
+
+<div class="container py-5">
+
+    <h1>Cadastrar Obra</h1>
+
+    <form asp-controller="Admin"
+          asp-action="Salvar"
+          method="post">
+
+        <label>Título</label>
+        <input asp-for="Titulo"
+               class="form-control" />
+
+        <label>Autor</label>
+        <input asp-for="Autor"
+               class="form-control" />
+
+        <label>URL da imagem</label>
+        <input asp-for="FotoUrl"
+               class="form-control" />
+
+        <label>Tipo</label>
+
+        <select asp-for="Tipo"
+                asp-items="Html.GetEnumSelectList<BibliotecaWeb.Models.TipoObra>()"
+                class="form-control">
+
+            <option value="">
+                Selecione o tipo
+            </option>
+
+        </select>
+
+        <label>Disponibilidade</label>
+
+        <select asp-for="Modalidade"
+                asp-items="Html.GetEnumSelectList<BibliotecaWeb.Models.ModalidadeDisponivel>()"
+                class="form-control">
+
+            <option value="">
+                Selecione a modalidade
+            </option>
+
+        </select>
+
+        <label>Preço de compra</label>
+
+        <input asp-for="PrecoCompra"
+               type="number"
+               step="0.01"
+               class="form-control" />
+
+        <label>Preço de aluguel</label>
+
+        <input asp-for="PrecoAluguel"
+               type="number"
+               step="0.01"
+               class="form-control" />
+
+        <label>Loja ou Plataforma</label>
+
+        <input asp-for="LojaOuPlataforma"
+               class="form-control" />
+
+        <br />
+
+        <button type="submit"
+                class="btn btn-dark">
+
+            Cadastrar
+
+        </button>
+
+    </form>
+
+</div>

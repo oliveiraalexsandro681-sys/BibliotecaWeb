@@ -1,0 +1,21 @@
+@model BibliotecaWeb.Models.Livro
+
+<div class="text-center">
+	<div class="container">
+		<div class="row row-cols-1 row-cols-md-5 g-4 mt-2">
+			<div class="col">
+				<div class="card h-100">
+					<img src="@Model.FotoUrl" alt="@Model.Titulo" />
+					<div class="card-body">
+						<h5 class="card-title">
+							@Model.Titulo
+						</h5>
+						<p class="card-text">
+							@Model.Autor
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

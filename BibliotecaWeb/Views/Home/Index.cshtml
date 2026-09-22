@@ -1,0 +1,991 @@
+﻿@model List<BibliotecaWeb.Models.Obra>
+
+@{
+    ViewData["Title"] = "Biblioteca WEBSERVER";
+}
+
+<!-- ABAIXO ESTA O NOSSO BANNER DE DESTAQUE PRINCIPAL -->
+<section class="banner-destaque">
+
+    <!-- LADO ESQUERDO -->
+    <div class="banner-conteudo">
+
+        <span class="banner-tag">📚 BIBLIOTECAWEB</span>
+
+        <h1>Grandes histórias<br />começam aqui.</h1>
+
+        <p>
+            Descubra livros, HQs, mangás e revistas
+            para explorar novos mundos.
+        </p>
+
+        <a asp-controller="Livros"
+           asp-action="Index"
+           class="btn-catalogo">
+            Explorar catálogo →
+        </a>
+
+    </div>
+
+    <!-- LADO DIREITO -->
+    <div class="banner-imagem">
+
+        <img src="https://t3.ftcdn.net/jpg/03/88/27/80/360_F_388278080_JAsjDSlouLpJgnVJMMEzjWvBs2QebQyk.jpg"
+             alt="HQs" />
+
+    </div>
+
+</section>
+
+
+<div class="text-center">
+
+    <!-- TÍTULO DINÂMICO -->
+    @if (!string.IsNullOrEmpty(ViewBag.BuscaAtual as string))
+    {
+        <h1 class="display-4 mb-3">
+            Resultados para "@ViewBag.BuscaAtual"
+        </h1>
+    }
+    else
+    {
+        <h1 class="display-4 mb-3">
+            Lançamentos Da Semana
+        </h1>
+    }
+
+
+    <!-- FORMULÁRIO DE BUSCA -->
+    <form asp-controller="Home"
+          asp-action="Index"
+          method="get"
+          class="buscador-biblioteca">
+
+        <div class="campo-busca">
+
+            <span>🔍</span>
+
+            <input type="text"
+                   name="busca"
+                   value="@ViewBag.BuscaAtual"
+                   placeholder="Pesquise por livros, HQs e mangás...." />
+
+        </div>
+
+        <button type="submit"
+                class="btn-buscar">
+            Buscar
+        </button>
+
+        @if (!string.IsNullOrEmpty(ViewBag.BuscaAtual as string))
+        {
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn-limpar">
+                Limpar
+            </a>
+        }
+
+    </form>
+
+
+    <hr style="color: black; border: 1px solid" class="hr mb-4" />
+
+
+    <!-- ===================================================== -->
+    <!-- RESULTADOS DO NOSSO BANCO -->
+    <!-- ===================================================== -->
+
+    @if (!string.IsNullOrEmpty(ViewBag.BuscaAtual as string))
+    {
+        <h2 class="mb-4">
+            📚 Obras disponíveis na BibliotecaWeb
+        </h2>
+    }
+
+
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var livro in Model)
+            {
+                <div class="col card-livro"
+                     data-titulo="@livro.Titulo">
+
+                    <div class="card card-biblioteca h-100">
+
+                        <img src="@livro.FotoUrl"
+                             class="card-img-top imagem-livro"
+                             alt="@livro.Titulo" />
+
+                        <div class="card-body d-flex flex-column justify-content-between">
+
+                            <div>
+
+                                <h5 class="card-title">
+                                    @livro.Titulo
+                                </h5>
+
+                                @if (!string.IsNullOrEmpty(livro.Autor))
+                                {
+                                    <p class="card-text text-muted mb-2">
+                                        Autor: @livro.Autor
+                                    </p>
+                                }
+
+                            </div>
+
+
+                            <button type="button"
+                                    class="btn btn-dark w-100 mt-2 btn-detalhes"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#meuModal"
+                                    data-id="@livro.Id">
+
+                                Ver detalhes
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        }
+        else if (!string.IsNullOrEmpty(ViewBag.BuscaAtual as string))
+        {
+            <div class="col-12 text-center text-muted my-4">
+
+                <h4>
+                    Nenhuma obra encontrada na BibliotecaWeb.
+                </h4>
+
+            </div>
+        }
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- RESULTADOS DA OPEN LIBRARY -->
+    <!-- ===================================================== -->
+
+    @if (!string.IsNullOrEmpty(ViewBag.BuscaAtual as string))
+    {
+        <section class="mt-5">
+
+            <h2 class="mb-4">
+                🌐 Resultados encontrados na Open Library
+            </h2>
+
+
+            <div id="resultadosExternos"
+                 class="row row-cols-1 row-cols-md-5 g-4">
+            </div>
+
+        </section>
+    }
+
+
+    <!-- ===================================================== -->
+    <!-- MODAL DE DETALHES DO NOSSO BANCO -->
+    <!-- ===================================================== -->
+
+    <div class="modal fade"
+         id="meuModal"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Detalhes da obra
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-5 text-center">
+
+                            <img src=""
+                                 id="imagemLivro"
+                                 class="img-fluid rounded"
+                                 style="max-height: 380px; object-fit: contain;" />
+
+                        </div>
+
+
+                        <div class="col-md-7">
+
+                            <h3 id="tituloLivro"></h3>
+
+                            <p id="autorLivro"
+                               class="text-muted">
+                            </p>
+
+                            <hr />
+
+                            <p id="tipoLivro"></p>
+
+                            <p id="modalidadeLivro"></p>
+
+                            <p id="precoCompraLivro"></p>
+
+                            <p id="precoAluguelLivro"></p>
+
+                            <p id="plataformaLivro"></p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-dark"
+                            data-bs-dismiss="modal">
+
+                        Fechar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- MODAL DE DETALHES DA OPEN LIBRARY -->
+    <!-- ===================================================== -->
+
+    <div class="modal fade"
+         id="modalExterno"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Detalhes da obra
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Fechar">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-md-5 text-center">
+
+                            <img id="modalExternoCapa"
+                                 src=""
+                                 alt="Capa da obra"
+                                 class="img-fluid rounded"
+                                 style="max-height: 380px; object-fit: contain;" />
+
+                        </div>
+
+
+                        <div class="col-md-7">
+
+                            <h3 id="modalExternoTitulo">
+                            </h3>
+
+
+                            <p>
+
+                                <strong>Autor:</strong>
+
+                                <span id="modalExternoAutor">
+                                </span>
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>Ano de publicação:</strong>
+
+                                <span id="modalExternoAno">
+                                </span>
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>Fonte:</strong>
+
+                                Open Library
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-dark"
+                            data-bs-dismiss="modal">
+
+                        Fechar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- SEÇÃO FÓRUM - NOTÍCIAS DA SEMANA -->
+<!-- ===================================================== -->
+
+<section class="mural">
+
+    <div class="mural-cabecalho">
+
+        <span class="mural-tag">
+            📰 NOVIDADES
+        </span>
+
+        <h2>
+            Notícias da semana
+        </h2>
+
+        <p>
+            Fique por dentro das novidades do mundo dos livros,
+            HQs, mangás e cultura geek.
+        </p>
+
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+
+        <!-- NOTÍCIA 1 -->
+
+        <div class="col">
+
+            <article class="card-noticia">
+
+                <div class="imagem-noticia">
+
+                    <img src="https://www.einerd.com/wp-content/uploads/2024/12/Cap-Hydra-e1787258793514-360x200.jpg.webp"
+                         alt="Capitão América" />
+
+                </div>
+
+
+                <div class="conteudo-noticia">
+
+                    <span class="categoria-noticia">
+                        QUADRINHOS
+                    </span>
+
+
+                    <h3>
+                        Capitão América da Hydra pode ser novo grande vilão das HQs
+                    </h3>
+
+
+                    <p>
+                        Poucos personagens carregam o peso simbólico do
+                        Capitão América dentro da Marvel Comics.
+                    </p>
+
+
+                    <a href="#" class="ler-noticia">
+                        Ler notícia →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+
+        <!-- NOTÍCIA 2 -->
+
+        <div class="col">
+
+            <article class="card-noticia">
+
+                <div class="imagem-noticia">
+
+                    <img src="https://image.api.playstation.com/vulcan/ap/rnd/202605/2221/bc854cdd9ee7b344fd1ad343a9eff5911ae8c08cb0d284cb.jpg?w=440"
+                         alt="Jogos" />
+
+                </div>
+
+
+                <div class="conteudo-noticia">
+
+                    <span class="categoria-noticia">
+                        MARVEL'S Wolverine
+                    </span>
+
+
+                    <h3>
+                        O título foca numa narrativa original inspirada na vasta mitologia do famoso mutante da Marvel Comics.
+                    </h3>
+
+
+                    <p>
+                        Compartilhando o mesmo universo e continuidade dos aclamados jogos Marvel's Spider-Man da própria desenvolvedora.
+                    </p>
+
+
+                    <a href="#" class="ler-noticia">
+                        Ler notícia →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+
+        <!-- NOTÍCIA 3 -->
+
+        <div class="col">
+
+            <article class="card-noticia">
+
+                <div class="imagem-noticia">
+
+                    <img src="https://guiadoator.com.br/wp-content/uploads/2026/09/harry-potter.webp"
+                         alt="Series" />
+
+                </div>
+
+
+                <div class="conteudo-noticia">
+
+                    <span class="categoria-noticia">
+                        Series
+                    </span>
+
+
+                    <h3>
+                        Harry Potter e a pedra filosofal promete ser o grande título para a HBO Max.
+                    </h3>
+
+
+                    <p>
+                        A aguardada série original da HBO, Harry Potter e a Pedra Filosofal,
+                        tem estreia marcada para o Natal de 2026.
+                    </p>
+
+
+                    <a href="#" class="ler-noticia">
+                        Ler notícia →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================================== -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        console.log("JAVASCRIPT DA HOME FUNCIONANDO!");
+
+
+        // =====================================================
+        // OBRAS DO NOSSO BANCO DE DADOS
+        // =====================================================
+
+        const livros =
+            @Html.Raw(ViewBag.LivrosJson ?? "[]");
+
+
+        const botoes =
+            document.querySelectorAll(".btn-detalhes");
+
+
+        botoes.forEach(botao => {
+
+            botao.addEventListener("click", function () {
+
+                const id =
+                    this.getAttribute("data-id");
+
+
+                const livro =
+                    livros.find(x =>
+                        x.Id == id ||
+                        x.id == id
+                    );
+
+
+                if (livro) {
+
+                    document.getElementById(
+                        "tituloLivro"
+                    ).textContent =
+                        livro.Titulo ||
+                        livro.titulo ||
+                        "";
+
+
+                    document.getElementById(
+                        "autorLivro"
+                    ).textContent =
+                        "Autor: " +
+                        (
+                            livro.Autor ||
+                            livro.autor ||
+                            ""
+                        );
+
+
+                    document.getElementById(
+                        "tipoLivro"
+                    ).textContent =
+                        "Tipo: " +
+                        (
+                            livro.Tipo ??
+                            livro.tipo ??
+                            ""
+                        );
+
+
+                    document.getElementById(
+                        "modalidadeLivro"
+                    ).textContent =
+                        "Disponibilidade: " +
+                        (
+                            livro.Modalidade ??
+                            livro.modalidade ??
+                            ""
+                        );
+
+
+                    document.getElementById(
+                        "precoCompraLivro"
+                    ).textContent =
+                        "Preço de compra: R$ " +
+                        (
+                            livro.PrecoCompra ??
+                            livro.precoCompra ??
+                            "0,00"
+                        );
+
+
+                    document.getElementById(
+                        "precoAluguelLivro"
+                    ).textContent =
+                        "Preço de aluguel: R$ " +
+                        (
+                            livro.PrecoAluguel ??
+                            livro.precoAluguel ??
+                            "0,00"
+                        );
+
+
+                    document.getElementById(
+                        "plataformaLivro"
+                    ).textContent =
+                        "Loja/Plataforma: " +
+                        (
+                            livro.LojaOuPlataforma ||
+                            livro.lojaOuPlataforma ||
+                            ""
+                        );
+
+
+                    document.getElementById(
+                        "imagemLivro"
+                    ).src =
+                        livro.FotoUrl ||
+                        livro.fotoUrl ||
+                        "";
+
+                }
+
+            });
+
+        });
+
+
+        // =====================================================
+        // RESULTADOS DA OPEN LIBRARY
+        // =====================================================
+
+        const livrosExternos =
+            @Html.Raw(ViewBag.LivrosExternosJson ?? "[]");
+
+
+        console.log(
+            "LIVROS RECEBIDOS DA OPEN LIBRARY:"
+        );
+
+        console.log(livrosExternos);
+
+
+        const container =
+            document.getElementById(
+                "resultadosExternos"
+            );
+
+
+        if (
+            container &&
+            livrosExternos.length > 0
+        ) {
+
+            livrosExternos.forEach(livro => {
+
+
+                // =====================================================
+                // DADOS DA OPEN LIBRARY
+                // =====================================================
+
+                const titulo =
+                    livro.title ||
+                    "Título não informado";
+
+
+                const autores =
+                    Array.isArray(
+                        livro.author_name
+                    ) &&
+                    livro.author_name.length > 0
+
+                        ? livro.author_name.join(", ")
+
+                        : "Autor não informado";
+
+
+                const ano =
+                    livro.first_publish_year ||
+                    "Ano não informado";
+
+
+                let capa = "";
+
+
+                if (livro.cover_i) {
+
+                    capa =
+                        "https://covers.openlibrary.org/b/id/" +
+                        livro.cover_i +
+                        "-M.jpg";
+
+                }
+
+
+                // =====================================================
+                // COLUNA
+                // =====================================================
+
+                const coluna =
+                    document.createElement("div");
+
+
+                coluna.className =
+                    "col";
+
+
+                // =====================================================
+                // CARD
+                // =====================================================
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "card card-biblioteca h-100";
+
+
+                // =====================================================
+                // CAPA
+                // =====================================================
+
+                if (capa) {
+
+                    const imagem =
+                        document.createElement("img");
+
+
+                    imagem.src =
+                        capa;
+
+
+                    imagem.alt =
+                        "Capa de " +
+                        titulo;
+
+
+                    imagem.className =
+                        "card-img-top imagem-livro";
+
+
+                    card.appendChild(
+                        imagem
+                    );
+
+                }
+
+
+                // =====================================================
+                // CORPO
+                // =====================================================
+
+                const corpo =
+                    document.createElement("div");
+
+
+                corpo.className =
+                    "card-body d-flex flex-column";
+
+
+                // =====================================================
+                // TÍTULO
+                // =====================================================
+
+                const tituloElemento =
+                    document.createElement("h5");
+
+
+                tituloElemento.className =
+                    "card-title";
+
+
+                tituloElemento.textContent =
+                    titulo;
+
+
+                // =====================================================
+                // AUTOR
+                // =====================================================
+
+                const autorElemento =
+                    document.createElement("p");
+
+
+                autorElemento.className =
+                    "card-text text-muted";
+
+
+                autorElemento.textContent =
+                    "Autor: " +
+                    autores;
+
+
+                // =====================================================
+                // ANO
+                // =====================================================
+
+                const anoElemento =
+                    document.createElement("p");
+
+
+                anoElemento.className =
+                    "card-text text-muted";
+
+
+                anoElemento.textContent =
+                    "Ano: " +
+                    ano;
+
+
+                // =====================================================
+                // BOTÃO PRETO
+                // =====================================================
+
+                const botao =
+                    document.createElement("button");
+
+
+                botao.type =
+                    "button";
+
+
+                botao.className =
+                    "btn btn-dark w-100 mt-auto";
+
+
+                botao.textContent =
+                    "Ver detalhes";
+
+
+                botao.setAttribute(
+                    "data-bs-toggle",
+                    "modal"
+                );
+
+
+                botao.setAttribute(
+                    "data-bs-target",
+                    "#modalExterno"
+                );
+
+
+                // =====================================================
+                // CLIQUE DO BOTÃO
+                // =====================================================
+
+                botao.addEventListener(
+                    "click",
+                    function () {
+
+
+                        document.getElementById(
+                            "modalExternoTitulo"
+                        ).textContent =
+                            titulo;
+
+
+                        document.getElementById(
+                            "modalExternoAutor"
+                        ).textContent =
+                            autores;
+
+
+                        document.getElementById(
+                            "modalExternoAno"
+                        ).textContent =
+                            ano;
+
+
+                        const imagemModal =
+                            document.getElementById(
+                                "modalExternoCapa"
+                            );
+
+
+                        if (livro.cover_i) {
+
+                            imagemModal.src =
+                                "https://covers.openlibrary.org/b/id/" +
+                                livro.cover_i +
+                                "-L.jpg";
+
+
+                            imagemModal.style.display =
+                                "block";
+
+                        }
+                        else {
+
+                            imagemModal.src =
+                                "";
+
+
+                            imagemModal.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+
+                // =====================================================
+                // MONTA O CARD
+                // =====================================================
+
+                corpo.appendChild(
+                    tituloElemento
+                );
+
+
+                corpo.appendChild(
+                    autorElemento
+                );
+
+
+                corpo.appendChild(
+                    anoElemento
+                );
+
+
+                corpo.appendChild(
+                    botao
+                );
+
+
+                card.appendChild(
+                    corpo
+                );
+
+
+                coluna.appendChild(
+                    card
+                );
+
+
+                container.appendChild(
+                    coluna
+                );
+
+            });
+
+        }
+
+    });
+
+</script>

@@ -1,0 +1,285 @@
+﻿@model BibliotecaWeb.Models.BuscaLivrosViewModel
+
+@{
+    ViewData["Title"] = "Área Administrativa";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <span class="catalogo-tag">
+            🔐 ÁREA RESTRITA
+        </span>
+
+        <h1 class="catalogo-titulo mt-3">
+            Administração do catálogo
+        </h1>
+
+        <p class="catalogo-descricao">
+            Pesquise obras na Open Library e adicione-as
+            ao catálogo da BibliotecaWeb.
+        </p>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- BUSCADOR -->
+    <!-- ===================================================== -->
+
+    <form asp-controller="Admin"
+          asp-action="Buscar"
+          method="get">
+
+        <div class="buscador-catalogo">
+
+            <div class="campo-busca-catalogo">
+
+                <span>🔍</span>
+
+                <input type="text"
+                       name="busca"
+                       value="@Model.Busca"
+                       placeholder="Pesquise uma obra..." />
+
+            </div>
+
+            <button type="submit"
+                    class="btn-buscar-catalogo">
+
+                Buscar
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- ===================================================== -->
+    <!-- OBRAS CADASTRADAS -->
+    <!-- ===================================================== -->
+
+    <hr class="my-5" />
+
+    <h2 class="mb-4">
+        📚 Obras cadastradas
+    </h2>
+
+
+    @if (ViewBag.Obras != null && ViewBag.Obras.Count > 0)
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Título
+                        </th>
+
+                        <th>
+                            Autor
+                        </th>
+
+                        <th>
+                            Tipo
+                        </th>
+
+                        <th>
+                            Disponibilidade
+                        </th>
+
+                        <th>
+                            Ações
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var obra in ViewBag.Obras)
+                    {
+                        <tr>
+
+                            <td>
+                                @obra.Titulo
+                            </td>
+
+                            <td>
+                                @obra.Autor
+                            </td>
+
+                            <td>
+                                @obra.Tipo
+                            </td>
+
+                            <td>
+                                @obra.Modalidade
+                            </td>
+
+                            <td>
+
+                                <a asp-controller="Admin"
+                                   asp-action="Editar"
+                                   asp-route-id="@obra.Id"
+                                   class="btn-buscar-catalogo">
+
+                                    Editar
+
+                                </a>
+                                <form asp-controller="Admin"
+                                  asp-action="Excluir"
+                                  method="post"
+                                  style="display:inline;">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@obra.Id" />
+
+                                <button type="submit"
+                                        class="btn-buscar-catalogo">
+
+                                    Excluir
+
+                                </button>
+
+                            </form>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">
+
+            Nenhuma obra cadastrada ainda.
+
+        </p>
+    }
+
+
+    <!-- ===================================================== -->
+    <!-- RESULTADOS DA OPEN LIBRARY -->
+    <!-- ===================================================== -->
+
+    @if (Model.Livros.Any())
+    {
+        <hr class="my-5" />
+
+        <h2 class="mb-4">
+            🌐 Resultados da Open Library
+        </h2>
+
+        <div class="row row-cols-1 row-cols-md-5 g-4">
+
+            @foreach (var livro in Model.Livros)
+            {
+                <div class="col">
+
+                    <div class="card card-biblioteca h-100">
+
+                        @if (livro.CapaId.HasValue)
+                        {
+                            <img src="https://covers.openlibrary.org/b/id/@(livro.CapaId)-M.jpg"
+                                 class="card-img-top imagem-livro"
+                                 alt="@livro.Titulo" />
+                        }
+
+                        <div class="card-body d-flex flex-column">
+
+                            <h5 class="card-title">
+                                @livro.Titulo
+                            </h5>
+
+                            <p class="card-text text-muted">
+
+                                Autor:
+
+                                @if (livro.Autores.Any())
+                                {
+                                    @string.Join(", ", livro.Autores)
+                                }
+                                else
+                                {
+                                    <span>
+                                        Autor não informado
+                                    </span>
+                                }
+
+                            </p>
+
+                            <p class="card-text text-muted">
+
+                                Ano:
+
+                                @(livro.AnoPublicacao?.ToString()
+                                    ?? "Não informado")
+
+                            </p>
+
+
+                            <!-- ===================================================== -->
+                            <!-- BOTÃO ADICIONAR AO CATÁLOGO -->
+                            <!-- ===================================================== -->
+
+                            <form asp-controller="Admin"
+                                  asp-action="Adicionar"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="Titulo"
+                                       value="@livro.Titulo" />
+
+                                <input type="hidden"
+                                       name="Autor"
+                                       value="@(livro.Autores.Any()
+                                           ? string.Join(", ", livro.Autores)
+                                           : "Autor não informado")" />
+
+                                <input type="hidden"
+                                       name="CapaId"
+                                       value="@livro.CapaId" />
+
+                                <button type="submit"
+                                        class="btn btn-dark w-100 mt-auto">
+
+                                    Adicionar ao catálogo
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else if (!string.IsNullOrWhiteSpace(Model.Busca))
+    {
+        <div class="alert alert-warning text-center mt-5">
+
+            Nenhuma obra encontrada.
+
+        </div>
+    }
+
+</div>
