@@ -1,14 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using BibliotecaWeb.Data; // Nome da pasta onde está o DbContext
+using BibliotecaWeb.Data; // Ajuste para o namespace correto do seu DbContext
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Adicionar suporte a Controllers com Views (HTML/MVC) e APIs
+// 1. Configurar Controllers com Views e Swagger
 builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. Configurar o DbContext para SQLite (Troca 'AppDbContext' pelo nome real do teu contexto)
+// REGISTRO DO SERVIÇO QUE ESTAVA FALTANDO:
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<BibliotecaWeb.Services.LivroApiService>();
+
+// 2. Configurar o DbContext para SQLite (Ajuste o nome do seu DbContext se necessário)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")
         ?? "Data Source=biblioteca.db"));
@@ -45,7 +49,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
-// 5. Rota padrão para as páginas HTML do site
+// 5. Rota padrão para carregar as telas visuais do site
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
